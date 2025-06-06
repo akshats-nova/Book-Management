@@ -91,29 +91,31 @@ export class BooksService {
             throw new DuplicateBookException(createBookDto.title)
         }
 
-        const lastBook = await this.bookModel.findOne().sort({ id: -1 }).exec();
-        const nextId = lastBook ? lastBook.id + 1 : 1;
-        const newBook=new this.bookModel({
-            id: nextId,
-            ...createBookDto
-        });
-        
+        // const lastBook = await this.bookModel.findOne().sort({ id: -1 }).exec();
+        // const nextId = lastBook ? lastBook.id + 1 : 1;
+        // const newBook=new this.bookModel({
+        //     id: nextId,
+        //     ...createBookDto
+        // });
+        const newBook=new this.bookModel(
+            createBookDto
+        );
         return await newBook.save();
     }
 
     async update(id: string, updateBookDto: UpdateBookDto): Promise<Book>{
-            const updatedBook = await this.bookModel.findOneAndUpdate(
-            { id },
+            const updatedBook = await this.bookModel.findByIdAndUpdate(
+            id,
             updateBookDto,
             { new: true },
-            );
+            ).exec();
 
             if (!updatedBook) throw new NotFoundException('Book not found');
             return updatedBook;
     }
 
     async delete(id:string): Promise<Book>{
-        const deletedBook = await this.bookModel.findOneAndDelete({ id }).exec();
+        const deletedBook = await this.bookModel.findByIdAndDelete(id).exec();
         if (!deletedBook) throw new NotFoundException('Book not found');
         return deletedBook;
     }
