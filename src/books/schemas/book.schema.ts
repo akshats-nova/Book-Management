@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import {Author, AuthorSchema} from './author.schema';
 
 export type BookDocument = Book & Document;
 
@@ -8,8 +10,8 @@ export class Book {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
-  author: string;
+  @Prop({type: [AuthorSchema], required: true })
+  authors: Author[];
 
   @Prop({ required: true })
   publishedDate: Date;
